@@ -7,7 +7,7 @@
 - ChartJS
 - Coingecko API (demo API Key included)
   
-## Running
+## Running - Developing
 
 - Install dependencies with `npm install` (or `pnpm install` or `yarn`)
 - Start a development server:
