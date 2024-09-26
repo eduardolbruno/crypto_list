@@ -45,7 +45,7 @@
 
   onMount(() => {
     // setup datetime
-    day = now.getDay() + 1;
+    day = now.getDate();
     month = now.toLocaleString("en", { month: "long" });
     year = now.getFullYear();
     dateString =
@@ -166,7 +166,7 @@
 <style>
   main {
     font-family: Arial, sans-serif;
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 20px;
   }
