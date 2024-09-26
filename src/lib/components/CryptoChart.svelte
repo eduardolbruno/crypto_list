@@ -16,7 +16,7 @@
             {
               label: `${cryptoData.name} Price (USD)`,
               data: cryptoData.prices,
-              borderColor: "rgb(60, 69, 69)",
+              borderColor: "rgb(235, 231, 124)",
               tension: 0.1,
             },
           ],

@@ -14,7 +14,7 @@
   let error: string | null = null;
   let loading = true;
   let timerId: number;
-  let refreshPeriod = 20000;
+  let refreshPeriod = 60000;
   let selectedCrypto: Cryptocurrency | null = null;
   let showPopup = false;
   let chartData: any = null;
@@ -87,14 +87,14 @@
 
 <main>
   <h1>Cryptocurrency Prices by Market Cap</h1>
-  <h4>This tables displays the top 10 cryptocurrencies of {dateString}</h4>
+  <h4>This list displays the top 10 cryptocurrencies of {dateString}</h4>
   <div class="selector-container">
     <label for="refresh-period">
         <img class="svg-icon" src="refresh.svg" alt="refresh-icon" />
     </label>
     <select id="refresh-period" on:change={handleRefreshPeriodChange}>
-      <option value="20000" selected>20s</option>
-      <option value="60000">1 min</option>
+      <option value="20000">20s</option>
+      <option value="60000" selected>1 min</option>
       <option value="300000">5 min</option>
       <option value="600000">10 min</option>
     </select>
@@ -237,7 +237,7 @@
   }
 
   .hoverable-row:hover {
-    background-color: #f0f0f0;
+    background-color: #ebe77c;
     cursor: pointer;
   }
 
