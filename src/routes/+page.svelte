@@ -61,7 +61,11 @@
     <h1>Cryptocurrency Prices by Market Cap</h1>
     <h4>This tables displays the top 10 cryptocurrencies of {dateString}</h4>
     <div class="selector-container">
-        <label for="refresh-period">Auto-refresh:</label>
+        <label for="refresh-period"> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+          </svg>
+        </label>
         <select id="refresh-period" on:change={handleRefreshPeriodChange}>
             <option value="5000" >5s</option>
             <option value="10000">10s</option>
@@ -70,6 +74,12 @@
             <option value="300000">5 min</option>
             <option value="600000">10 min</option>
         </select>
+        <button class="refresh-button" on:click={fetchData}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+            </svg>
+            Force Refresh
+          </button>
     </div>
     {#if loading}
     <p>Loading...</p>
@@ -157,20 +167,33 @@
     }
 
     select {
-        width: 100%;
         padding: 5px;
     }
-
     
   .selector-container {
     position: absolute;
     top: 0;
     right: 0;
-    padding: 10px;
+    padding: 5px;
     display: flex;
     align-items: center;
     gap: 10px;
     font-size: small;
+  }
+
+  .refresh-button {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .refresh-button svg {
+    width: 16px;
+    height: 16px;
   }
 
   </style>
