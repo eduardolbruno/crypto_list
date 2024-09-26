@@ -180,7 +180,7 @@
           {selectedCrypto.name} ({selectedCrypto.symbol.toUpperCase()}) - Last 24 Hours
         </h2>
         <CryptoChart cryptoData={chartData} />
-        <button class="popup-close-btn" on:click={closePopup}>Close</button>
+        <button class="popup-close-btn" on:click={closePopup}>x</button>
       </div>
     </div>
   {/if}
@@ -292,17 +292,17 @@
     max-width: 80%;
     max-height: 80%;
     overflow: auto;
+    position: relative;
   }
 
   .popup-close-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.5rem 1rem;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
     border: none;
-    border-radius: 4px;
+    font-size: 1.5rem;
     cursor: pointer;
-    width: 100%;
-    text-align: center;
+    z-index: 1000;
   }
 </style>
