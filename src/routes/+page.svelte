@@ -60,8 +60,8 @@
   <main>
     <h1>Cryptocurrency Prices by Market Cap</h1>
     <h4>This tables displays the top 10 cryptocurrencies of {dateString}</h4>
-    <div style="padding: 10px 0 10px;">
-        <label for="refresh-period" style="font-size: small; ">Auto-refresh:</label>
+    <div class="selector-container">
+        <label for="refresh-period">Auto-refresh:</label>
         <select id="refresh-period" on:change={handleRefreshPeriodChange}>
             <option value="5000" >5s</option>
             <option value="10000">10s</option>
@@ -76,6 +76,7 @@
   {:else if error}
     <p class="error">{error}</p>
   {:else}
+  <div class="table-container">
       <table>
         <thead>
           <tr>
@@ -87,12 +88,12 @@
             <th>Market Cap</th>
           </tr>
         </thead>
-        <tbody>
         {#if cryptocurrencies.length > 0}
+        <tbody>
             {#each cryptocurrencies as crypto, index}
             <tr>
                 <td>{index + 1}</td>
-                <td>{crypto.name}</td>
+                <td><b>{crypto.name}</b></td>
                 <td>{crypto.symbol.toUpperCase()}</td>
                 <td>${crypto.current_price.toFixed(2)}</td>
                 <td class:positive={crypto.price_change_percentage_24h > 0}
@@ -102,11 +103,12 @@
                 <td>${crypto.market_cap.toLocaleString()}</td>
                 </tr>
             {/each}
-        {:else}
-        <p>Loading data...</p>
-        {/if}
         </tbody>
+        {:else}
+        <p style="text-align: center;">Loading data...</p>
+        {/if}
       </table>
+  </div>
   
     {/if}
   </main>
@@ -118,10 +120,16 @@
       margin: 0 auto;
       padding: 20px;
     }
-  
+
+    .table-container {
+        position: relative;
+        width: 100%;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
+      margin-top: 50px;
     }
   
     th, td {
@@ -132,6 +140,7 @@
   
     th {
       background-color: #f2f2f2;
+      font-size: small;
     }
   
     .positive {
@@ -146,5 +155,22 @@
         color: red;
         font-weight: bold;
     }
+
+    select {
+        width: 100%;
+        padding: 5px;
+    }
+
+    
+  .selector-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: small;
+  }
 
   </style>
