@@ -7,17 +7,49 @@
     let cryptocurrencies: Cryptocurrency[] = [];
     let now = new Date(), month, day, year;
 	let dateString: string;
+    let error: string | null = null;
+    let loading = true;
+    let timerId: number;
+    let refreshPeriod = 30000; 
 
-    onMount(async () => {
+    async function fetchData() {
+        loading = true;
+
+        try {
+            cryptocurrencies = await fetchCryptoCurrencies();
+            error = null;
+        } catch (e) {
+            error = e instanceof Error ? e.message : 'An error occurred';
+        } finally {
+            loading = false;
+        }
+    }
+
+    function startRefreshInterval() {
+        clearInterval(timerId);
+        timerId = setInterval(fetchData, refreshPeriod);
+    }
+
+    onMount(() => {
         // setup datetime
         day = (now.getDay() + 1);
         month = now.toLocaleString('en', { month: 'long' });
         year = now.getFullYear();
         dateString = month.charAt(0).toUpperCase() + month.slice(1)+' '+day+', '+year;
 
+
         // get crypto data from API
-        cryptocurrencies = await fetchCryptoCurrencies();
+        fetchData();
+        startRefreshInterval();
+
+        return () => clearInterval(timerId);
+
     });
+
+    function handleRefreshPeriodChange(event: Event) {
+        refreshPeriod = parseInt((event.target as HTMLSelectElement).value);
+        startRefreshInterval();
+    }
 
   </script>
   
@@ -26,9 +58,24 @@
   </svelte:head>
 
   <main>
-    <h2>Cryptocurrency Prices by Market Cap</h2>
-    <p>This tables displays the top 10 cryptocurrencies of {dateString}</p>
-    {#if cryptocurrencies.length > 0}
+    <h1>Cryptocurrency Prices by Market Cap</h1>
+    <h4>This tables displays the top 10 cryptocurrencies of {dateString}</h4>
+    <div style="padding: 10px 0 10px;">
+        <label for="refresh-period" style="font-size: small; ">Auto-refresh:</label>
+        <select id="refresh-period" on:change={handleRefreshPeriodChange}>
+            <option value="5000" >5s</option>
+            <option value="10000">10s</option>
+            <option value="30000" selected >30s</option>
+            <option value="60000">1 min</option>
+            <option value="300000">5 min</option>
+            <option value="600000">10 min</option>
+        </select>
+    </div>
+    {#if loading}
+    <p>Loading...</p>
+  {:else if error}
+    <p class="error">{error}</p>
+  {:else}
       <table>
         <thead>
           <tr>
@@ -41,23 +88,26 @@
           </tr>
         </thead>
         <tbody>
-          {#each cryptocurrencies as crypto, index}
-          <tr>
-              <td>{index + 1}</td>
-              <td>{crypto.name}</td>
-              <td>{crypto.symbol.toUpperCase()}</td>
-              <td>${crypto.current_price.toFixed(2)}</td>
-              <td class:positive={crypto.price_change_percentage_24h > 0}
-                  class:negative={crypto.price_change_percentage_24h < 0}>
-                {crypto.price_change_percentage_24h.toFixed(2)}%
-              </td>
-              <td>${crypto.market_cap.toLocaleString()}</td>
-            </tr>
-          {/each}
+        {#if cryptocurrencies.length > 0}
+            {#each cryptocurrencies as crypto, index}
+            <tr>
+                <td>{index + 1}</td>
+                <td>{crypto.name}</td>
+                <td>{crypto.symbol.toUpperCase()}</td>
+                <td>${crypto.current_price.toFixed(2)}</td>
+                <td class:positive={crypto.price_change_percentage_24h > 0}
+                    class:negative={crypto.price_change_percentage_24h < 0}>
+                    {crypto.price_change_percentage_24h.toFixed(2)}%
+                </td>
+                <td>${crypto.market_cap.toLocaleString()}</td>
+                </tr>
+            {/each}
+        {:else}
+        <p>Loading data...</p>
+        {/if}
         </tbody>
       </table>
-    {:else}
-      <p>Loading data...</p>
+  
     {/if}
   </main>
 
@@ -90,6 +140,11 @@
   
     .negative {
       color: red;
+    }
+
+    .error {
+        color: red;
+        font-weight: bold;
     }
 
   </style>
