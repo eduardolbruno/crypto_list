@@ -19,3 +19,16 @@ export async function fetchCryptoCurrencies() {
     return [];
   }
 }
+
+/**
+ * @param {string} id
+ */
+export async function fetchHistorical(id) {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/coins/${id}/market_chart?vs_currency=usd&days=1`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      return [];
+    }
+  }
