@@ -1,4 +1,6 @@
 # Crypto currencies list, using Svelte + Coingecko API
+| ![image](https://github.com/user-attachments/assets/52dc4be5-6399-4fc2-8456-6e06f21e5d6e)        | ![image](https://github.com/user-attachments/assets/c291548d-72c1-4be2-baeb-75202a1dac0b) |
+| --------------------------------------- | --------------------------------------- |
 
 ## Under the hood
 
