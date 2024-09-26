@@ -90,21 +90,7 @@
   <h4>This tables displays the top 10 cryptocurrencies of {dateString}</h4>
   <div class="selector-container">
     <label for="refresh-period">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path
-          d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"
-        />
-      </svg>
+        <img class="svg-icon" src="refresh.svg" alt="refresh-icon" />
     </label>
     <select id="refresh-period" on:change={handleRefreshPeriodChange}>
       <option value="20000" selected>20s</option>
@@ -113,21 +99,7 @@
       <option value="600000">10 min</option>
     </select>
     <button class="refresh-button" on:click={fetchData}>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path
-          d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"
-        />
-      </svg>
+        <img class="svg-icon" src="refresh.svg" alt="refresh-icon" />
       Force Refresh
     </button>
   </div>
@@ -160,6 +132,11 @@
                   class:positive={crypto.price_change_percentage_24h > 0}
                   class:negative={crypto.price_change_percentage_24h < 0}
                 >
+                  {#if crypto.price_change_percentage_24h >= 0}
+                    <img class="svg-icon" src="arrowUp.svg" alt="+" />
+                  {:else}
+                    <img class="svg-icon" src="arrowDown.svg" alt="-" />
+                  {/if} 
                   {crypto.price_change_percentage_24h.toFixed(2)}%
                 </td>
                 <td>${crypto.market_cap.toLocaleString()}</td>
@@ -255,11 +232,6 @@
     cursor: pointer;
   }
 
-  .refresh-button svg {
-    width: 16px;
-    height: 16px;
-  }
-
   .hoverable-row {
     transition: background-color 0.4s ease;
   }
@@ -304,5 +276,10 @@
     font-size: 1.5rem;
     cursor: pointer;
     z-index: 1000;
+  }
+
+  .svg-icon {
+    width: 16px;
+    height: 16px;
   }
 </style>
