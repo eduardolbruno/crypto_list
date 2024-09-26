@@ -1,6 +1,6 @@
 # Crypto currencies list, using Svelte + Coingecko API
 
-## Running
+## Under the hood
 
 - SvelteKit
 - Axios
