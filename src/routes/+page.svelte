@@ -93,15 +93,10 @@
         <img class="svg-icon" src="refresh.svg" alt="refresh-icon" />
     </label>
     <select id="refresh-period" on:change={handleRefreshPeriodChange}>
-      <option value="20000">20s</option>
       <option value="60000" selected>1 min</option>
       <option value="300000">5 min</option>
       <option value="600000">10 min</option>
     </select>
-    <button class="refresh-button" on:click={fetchData}>
-        <img class="svg-icon" src="refresh.svg" alt="refresh-icon" />
-      Force Refresh
-    </button>
   </div>
   {#if loading}
     <p>Loading...</p>
@@ -220,16 +215,6 @@
     align-items: center;
     gap: 10px;
     font-size: small;
-  }
-
-  .refresh-button {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
   }
 
   .hoverable-row {
