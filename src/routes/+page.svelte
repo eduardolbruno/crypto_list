@@ -1,6 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { fetchCryptoCurrencies, fetchHistorical } from "$lib/api.js";
+  import {
+    fetchCryptoCurrencies,
+    fetchHistorical,
+    fetchCryptoExtraInfo,
+  } from "$lib/api.js";
   import type { Cryptocurrency } from "$lib/types";
   import CryptoChart from "$lib/components/CryptoChart.svelte";
 
@@ -18,6 +22,7 @@
   let selectedCrypto: Cryptocurrency | null = null;
   let showPopup = false;
   let chartData: any = null;
+  let detailedInfo: any = null;
 
   async function fetchData() {
     loading = true;
@@ -72,6 +77,8 @@
       ),
       prices: data.prices.map((price: number[]) => price[1]),
     };
+
+    detailedInfo = await fetchCryptoExtraInfo(crypto.id);
   }
 
   function closePopup() {
@@ -87,12 +94,15 @@
 
 <main>
   <h1>Cryptocurrency Prices by Market Cap</h1>
-  <h4>This list displays the top 10 cryptocurrencies of {dateString}</h4>
+  <h4>
+    This list showcases the top 10 cryptocurrencies ranked by market
+    capitalization as of {dateString}
+  </h4>
   <div class="selector-container">
     <label for="refresh-period">
-        <img class="svg-icon" src="refresh.svg" alt="refresh-icon" />
+      <img class="svg-icon" src="refresh.svg" alt="refresh-icon" title="Auto-Refresh feature" />
     </label>
-    <select id="refresh-period" on:change={handleRefreshPeriodChange}>
+    <select id="refresh-period" on:change={handleRefreshPeriodChange} title="Auto-Refresh feature">
       <option value="60000" selected>1 min</option>
       <option value="300000">5 min</option>
       <option value="600000">10 min</option>
@@ -131,7 +141,7 @@
                     <img class="svg-icon" src="arrowUp.svg" alt="+" />
                   {:else}
                     <img class="svg-icon" src="arrowDown.svg" alt="-" />
-                  {/if} 
+                  {/if}
                   {crypto.price_change_percentage_24h.toFixed(2)}%
                 </td>
                 <td>${crypto.market_cap.toLocaleString()}</td>
@@ -145,12 +155,65 @@
     </div>
   {/if}
 
-  {#if showPopup && selectedCrypto && chartData}
+  {#if showPopup && selectedCrypto && chartData && detailedInfo}
     <div class="popup-overlay">
       <div class="popup-content">
         <h2>
-          {selectedCrypto.name} ({selectedCrypto.symbol.toUpperCase()}) - Last 24 Hours
+          {selectedCrypto.name} ({selectedCrypto.symbol.toUpperCase()}) - Last
+          24 Hours
         </h2>
+        <div class="detailed-info">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Current Price:</span>
+              <span class="info-value"
+                >${selectedCrypto.current_price.toFixed(2)}</span
+              >
+            </div>
+            <div class="info-item">
+              <span class="info-label">24h Change:</span>
+              <span
+                class="info-value class:positive={selectedCrypto.price_change_percentage_24h >
+                  0} class:negative={selectedCrypto.price_change_percentage_24h <
+                  0}"
+              >
+                {#if selectedCrypto.price_change_percentage_24h >= 0}
+                  <img class="svg-icon" src="arrowUp.svg" alt="+" />
+                {:else}
+                  <img class="svg-icon" src="arrowDown.svg" alt="-" />
+                {/if}
+                {selectedCrypto.price_change_percentage_24h.toFixed(2)}%
+              </span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Market Cap:</span>
+              <span class="info-value"
+                >${selectedCrypto.market_cap.toLocaleString()}</span
+              >
+            </div>
+            <div class="info-item">
+              <span class="info-label">24h Volume:</span>
+              <span class="info-value"
+                >${detailedInfo.market_data.total_volume.usd.toLocaleString()}</span
+              >
+            </div>
+            <div class="info-item">
+              <span class="info-label">Circulating Supply:</span>
+              <span class="info-value"
+                >{detailedInfo.market_data.circulating_supply.toLocaleString()}
+                {selectedCrypto.symbol.toUpperCase()}</span
+              >
+            </div>
+            <div class="info-item">
+              <span class="info-label">All-Time High:</span>
+              <span class="info-value"
+                >${detailedInfo.market_data.ath.usd.toFixed(2)} ({new Date(
+                  detailedInfo.market_data.ath_date.usd
+                ).toLocaleDateString()})</span
+              >
+            </div>
+          </div>
+        </div>
         <CryptoChart cryptoData={chartData} />
         <button class="popup-close-btn" on:click={closePopup}>x</button>
       </div>
@@ -250,6 +313,36 @@
     max-height: 80%;
     overflow: auto;
     position: relative;
+  }
+
+  .detailed-info {
+    margin-top: 30px;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .info-item {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .info-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+  }
+
+  .info-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
   }
 
   .popup-close-btn {
