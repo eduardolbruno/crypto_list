@@ -47,7 +47,10 @@
               <td>{crypto.name}</td>
               <td>{crypto.symbol.toUpperCase()}</td>
               <td>${crypto.current_price.toFixed(2)}</td>
-              <td>{crypto.price_change_percentage_24h.toFixed(2)}%</td>
+              <td class:positive={crypto.price_change_percentage_24h > 0}
+                  class:negative={crypto.price_change_percentage_24h < 0}>
+                {crypto.price_change_percentage_24h.toFixed(2)}%
+              </td>
               <td>${crypto.market_cap.toLocaleString()}</td>
             </tr>
           {/each}
@@ -81,4 +84,12 @@
       background-color: #f2f2f2;
     }
   
+    .positive {
+      color: green;
+    }
+  
+    .negative {
+      color: red;
+    }
+
   </style>
