@@ -101,7 +101,7 @@
         {#if cryptocurrencies.length > 0}
         <tbody>
             {#each cryptocurrencies as crypto, index}
-            <tr>
+            <tr class="hoverable-row">
                 <td>{index + 1}</td>
                 <td><b>{crypto.name}</b></td>
                 <td>{crypto.symbol.toUpperCase()}</td>
@@ -149,7 +149,7 @@
     }
   
     th {
-      background-color: #f2f2f2;
+      background-color: #cccccc;
       font-size: small;
     }
   
@@ -194,6 +194,19 @@
   .refresh-button svg {
     width: 16px;
     height: 16px;
+  }
+
+  .hoverable-row {
+    transition: background-color 0.4s ease;
+  }
+
+  .hoverable-row:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f5f5f5;
   }
 
   </style>
